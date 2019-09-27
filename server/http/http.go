@@ -6,19 +6,22 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/go-redis/redis"
 	"github.com/gorilla/mux"
 )
 
 // Server struct
 type Server struct {
 	address    string
+	redis      *redis.Client
 	httpServer *http.Server
 }
 
 // New HTTP server
-func New(address string) *Server {
+func New(address string, redis *redis.Client) *Server {
 	return &Server{
 		address: address,
+		redis:   redis,
 	}
 }
 
@@ -32,6 +35,8 @@ func (s *Server) Run() error {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/ping", s.Ping).Methods("GET")
+
+	r.HandleFunc("/redis", s.Redis).Methods("GET")
 
 	httpServer := &http.Server{
 		Handler:      r,
