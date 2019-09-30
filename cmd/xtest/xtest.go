@@ -4,6 +4,8 @@ import (
 	"github.com/go-redis/redis"
 	"github.com/williamchanrico/xtest/log"
 	"github.com/williamchanrico/xtest/server"
+	"github.com/williamchanrico/xtest/xtest"
+	redisXtest "github.com/williamchanrico/xtest/xtest/redis"
 )
 
 // Flags for xtest
@@ -20,10 +22,13 @@ func Run(flags Flags) (int, error) {
 	redisClient := redis.NewClient(&redis.Options{
 		Addr: flags.RedisAddress,
 	})
+	redisBackend := redisXtest.New(redisClient)
+
+	xtestSvc := xtest.New(redisBackend)
 
 	s := server.Server{
 		HTTPAddress: flags.HTTPAddress,
-		Redis:       redisClient,
+		Xtest:       xtestSvc,
 	}
 	log.Infof("xtest HTTP server listens on: %v\n", s.HTTPAddress)
 	if err := s.Run(); err != nil {

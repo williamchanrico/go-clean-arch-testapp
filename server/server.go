@@ -3,21 +3,21 @@ package server
 import (
 	"context"
 
-	"github.com/go-redis/redis"
 	xtestHTTP "github.com/williamchanrico/xtest/server/http"
+	"github.com/williamchanrico/xtest/xtest"
 )
 
 // Server struct
 type Server struct {
 	HTTPAddress string
-	Redis       *redis.Client
+	Xtest       *xtest.Service
 
 	stopChan chan context.Context
 }
 
 // Run xtest servers
 func (s *Server) Run() error {
-	httpServer := xtestHTTP.New(s.HTTPAddress, s.Redis)
+	httpServer := xtestHTTP.New(s.HTTPAddress, s.Xtest)
 	errChan := make(chan error)
 
 	// Start HTTP server

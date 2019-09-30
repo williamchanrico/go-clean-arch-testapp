@@ -2,32 +2,33 @@ package http
 
 import (
 	"context"
-	"net"
 	"net/http"
 	"time"
 
-	"github.com/go-redis/redis"
 	"github.com/gorilla/mux"
+	"github.com/williamchanrico/xtest/listener"
+	"github.com/williamchanrico/xtest/xtest"
 )
 
 // Server struct
 type Server struct {
-	address    string
-	redis      *redis.Client
-	httpServer *http.Server
+	address string
+	xtest   *xtest.Service
+
+	server *http.Server
 }
 
 // New HTTP server
-func New(address string, redis *redis.Client) *Server {
+func New(address string, xtestSvc *xtest.Service) *Server {
 	return &Server{
 		address: address,
-		redis:   redis,
+		xtest:   xtestSvc,
 	}
 }
 
 // Run HTTP server
 func (s *Server) Run() error {
-	l, err := net.Listen("tcp", s.address)
+	l, err := listener.Listen(s.address)
 	if err != nil {
 		return err
 	}
@@ -43,18 +44,18 @@ func (s *Server) Run() error {
 		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 15 * time.Second,
 	}
-	s.httpServer = httpServer
+	s.server = httpServer
 
 	return httpServer.Serve(l)
 }
 
 // Shutdown HTTP server
 func (s *Server) Shutdown(ctx context.Context) error {
-	if s.httpServer == nil {
+	if s.server == nil {
 		return nil
 	}
 
-	return s.httpServer.Shutdown(ctx)
+	return s.server.Shutdown(ctx)
 }
 
 // Ping pong

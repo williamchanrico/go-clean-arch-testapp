@@ -1,24 +1,17 @@
 package http
 
 import (
-	"fmt"
 	"net/http"
 )
 
 // Redis test redis connection
 func (s *Server) Redis(w http.ResponseWriter, r *http.Request) {
-	redisOpts := s.redis.Options()
-	_, err := s.redis.Ping().Result()
-
-	pingResult := ""
+	testResult, err := s.xtest.TestRedis()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		pingResult = "Redis Ping failed!"
-	} else {
-		w.WriteHeader(http.StatusOK)
-		pingResult = "Redis Ping success!"
+		w.Write([]byte(err.Error()))
+		return
 	}
-
-	resp := fmt.Sprintf("%v [%v://%v]\n", pingResult, redisOpts.Network, redisOpts.Addr)
-	w.Write([]byte(resp))
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(testResult))
 }

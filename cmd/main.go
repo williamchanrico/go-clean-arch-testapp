@@ -19,6 +19,8 @@ func main() {
 	flag.StringVar(&f.HTTPAddress, "http-address", "0.0.0.0:9000", "HTTP API listener")
 	flag.StringVar(&f.RedisAddress, "redis-address", "127.0.0.1:6379", "Default redis test address")
 	flag.StringVar(&f.LogLevel, "log-level", "info", "App log level")
+
+	flag.BoolVar(&showVersionAndExit, "version", false, "Show version and exit")
 	flag.Parse()
 
 	if showVersionAndExit {
