@@ -5,7 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	"github.com/williamchanrico/xtest/listener"
 	"github.com/williamchanrico/xtest/xtest"
 )
@@ -33,11 +34,16 @@ func (s *Server) Run() error {
 		return err
 	}
 
-	r := mux.NewRouter()
+	r := chi.NewRouter()
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
 
-	r.HandleFunc("/ping", s.Ping).Methods("GET")
-
-	r.HandleFunc("/redis", s.Redis).Methods("GET")
+	r.Get("/ping", s.Ping)
+	r.Get("/redis", s.Redis)
+	r.Get("/postgres", s.Postgres)
+	r.Get("/nsq", s.NSQ)
 
 	httpServer := &http.Server{
 		Handler:      r,

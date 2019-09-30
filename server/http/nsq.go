@@ -4,16 +4,16 @@ import (
 	"net/http"
 )
 
-// Redis test redis connection
-func (s *Server) Redis(w http.ResponseWriter, r *http.Request) {
+// NSQ test NSQ connection
+func (s *Server) NSQ(w http.ResponseWriter, r *http.Request) {
 	var err error
 	testResult := ""
 
 	addr := r.URL.Query().Get("addr")
 	if addr != "" {
-		testResult, err = s.xtest.TestRedisNewAddr(addr)
+		testResult, err = s.xtest.TestNSQNewAddr(addr)
 	} else {
-		testResult, err = s.xtest.TestRedisDefaultAddr()
+		testResult, err = s.xtest.TestNSQDefaultAddr()
 	}
 	if err != nil {
 		http.Error(w, err.Error(), 500)

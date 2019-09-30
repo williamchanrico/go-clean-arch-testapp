@@ -18,11 +18,19 @@ func New(client *redis.Client) *Xtest {
 	}
 }
 
-// TestPing ping redis backend
-func (x *Xtest) TestPing() (string, error) {
+// PingDefaultAddr pings the default redis
+func (x *Xtest) PingDefaultAddr() (string, error) {
 	redisOpts := x.client.Options()
 	result, err := x.client.Ping().Result()
 
 	ret := fmt.Sprintf("%v [%v]\n", result, redisOpts.Addr)
 	return ret, err
+}
+
+// PingNewAddr pings redis located on addr
+func (x *Xtest) PingNewAddr(addr string) (string, error) {
+	redisClient := redis.NewClient(&redis.Options{Addr: addr})
+	result, err := redisClient.Ping().Result()
+	redisClient.Close()
+	return result, err
 }

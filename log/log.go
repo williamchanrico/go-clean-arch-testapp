@@ -118,7 +118,7 @@ func Errorw(msg string, fields Fields) {
 
 // // Errors function to log errors package
 // func Errors(err error) {
-// 	defaultLogger.Errors(err)
+//	defaultLogger.Errors(err)
 // }
 
 // Fatal function

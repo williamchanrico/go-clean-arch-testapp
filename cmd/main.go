@@ -17,7 +17,9 @@ var (
 func main() {
 	f := xtest.Flags{}
 	flag.StringVar(&f.HTTPAddress, "http-address", "0.0.0.0:9000", "HTTP API listener")
-	flag.StringVar(&f.RedisAddress, "redis-address", "127.0.0.1:6379", "Default redis test address")
+	flag.StringVar(&f.RedisAddress, "redis-address", "127.0.0.1:6379", "Redis address")
+	flag.StringVar(&f.PostgresDSN, "postgres-dsn", "postgres://postgres:@127.0.0.1/postgres?sslmode=disable", "PostgreSQL DB DSN")
+	flag.StringVar(&f.NSQDAddress, "nsqd-address", "127.0.0.1:4150", "NSQd address")
 	flag.StringVar(&f.LogLevel, "log-level", "info", "App log level")
 
 	flag.BoolVar(&showVersionAndExit, "version", false, "Show version and exit")
