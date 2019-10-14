@@ -1,6 +1,7 @@
 package xtest
 
 import (
+	"context"
 	"database/sql"
 
 	"github.com/go-redis/redis"
@@ -13,6 +14,7 @@ import (
 // Flags for xtest
 type Flags struct {
 	HTTPAddress  string
+	GRPCAddress  string
 	RedisAddress string
 	PostgresDSN  string
 	NSQDAddress  string
@@ -40,10 +42,11 @@ func Run(flags Flags) (int, error) {
 
 	s := server.Server{
 		HTTPAddress: flags.HTTPAddress,
+		GRPCAddress: flags.GRPCAddress,
 		Xtest:       xtestSvc,
 	}
-	log.Infof("xtest HTTP server listens on: %v\n", s.HTTPAddress)
-	if err := s.Run(); err != nil {
+	log.Infof("Starging xtest servers")
+	if err := s.Run(context.Background()); err != nil {
 		return 1, err
 	}
 

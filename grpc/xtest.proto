@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package grpc;
+
+service Xtest {
+  rpc Xtest (XtestRequest) returns (XtestResponse) {}
+}
+
+message XtestRequest {
+  string content = 1;
+}
+
+message XtestResponse {
+  string content = 1;
+}
