@@ -45,7 +45,7 @@ func Run(flags Flags) (int, error) {
 		GRPCAddress: flags.GRPCAddress,
 		Xtest:       xtestSvc,
 	}
-	log.Infof("Starging xtest servers")
+	log.Infof("Starting xtest servers")
 	if err := s.Run(context.Background()); err != nil {
 		return 1, err
 	}
